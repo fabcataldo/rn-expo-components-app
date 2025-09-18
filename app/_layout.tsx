@@ -1,4 +1,3 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
@@ -7,6 +6,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 import { allRoutes } from '@/constants/Routes';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemeChangerProvider } from '@/presentation/context/ThemeChangerContext';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import "../global.css";
@@ -30,43 +30,42 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{backgroundColor: backgroundColor, flex: 1}}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {/* <ThemedView margin>
-          <ThemedText type='h1'>Hola mundo!</ThemedText>
-        </ThemedView> */}
-
-        <Stack
-          screenOptions={{
-            headerShadowVisible: false,
-            contentStyle: {
-              backgroundColor: backgroundColor
-            },
-            headerStyle: {
-              backgroundColor: backgroundColor
-            }
-          }}
-        >
-          <Stack.Screen
-            name="index"
-            options={{
-              title: ''
+      <ThemeChangerProvider>
+        {/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
+          <Stack
+            screenOptions={{
+              headerShadowVisible: false,
+              contentStyle: {
+                backgroundColor: backgroundColor
+              },
+              headerStyle: {
+                backgroundColor: backgroundColor
+              }
             }}
-          />
-          
-          {
-            allRoutes.map(route => (
-              <Stack.Screen
-                key={route.name}
-                name={route.name}
-                options={{
-                  title: route.title
-                }}
-              />
-            ))
-          }
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+          >
+            <Stack.Screen
+              name="index"
+              options={{
+                title: ''
+              }}
+            />
+            
+            {
+              allRoutes.map(route => (
+                <Stack.Screen
+                  key={route.name}
+                  name={route.name}
+                  options={{
+                    title: route.title,
+                    headerShown: !route.title.includes('Slides')
+                  }}
+                />
+              ))
+            }
+          </Stack>
+          <StatusBar style="auto" />
+        {/* </ThemeProvider> */}
+      </ThemeChangerProvider>
     </GestureHandlerRootView>
 
   );
